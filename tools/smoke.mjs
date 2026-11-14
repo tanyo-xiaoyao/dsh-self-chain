@@ -18,7 +18,7 @@ const env = {
 for (const [k, v] of Object.entries(env)) process.env[k] = v;
 fs.mkdirSync(env.SELFCHAIN_NOTES, { recursive: true });
 
-const mod = await import('file:///D:/dsh-flash/projects/self-chain/lib/index.js');
+const mod = await import(new URL('../lib/index.js', import.meta.url).href);
 const tools = {};
 const hooks = {};
 const ctx = {

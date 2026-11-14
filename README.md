@@ -84,20 +84,21 @@ The 14-day condition matters: reference counts saturate (an old note mentioned a
 
 ## Configuration
 
-Everything has a default; override per key via plugin config or environment variable:
+Everything has a default; override per key via plugin config or environment variable. The default root is `~/.dsh-self-chain/` (set `SELFCHAIN_DATA` to move all of it):
 
-| key | env | default |
+| key | env | default (under the root) |
 |---|---|---|
-| `chain` | `SELFCHAIN_CHAIN` | `D:/memory/生长/自我链.jsonl` |
-| `summary` | `SELFCHAIN_SUMMARY` | `…/自我摘要.md` |
-| `lifetime` | `SELFCHAIN_LIFETIME` | `…/一生长史.md` |
-| `proposal` | `SELFCHAIN_PROPOSAL` | `…/state/遗忘提案.jsonl` |
-| `fadelog` | `SELFCHAIN_FADELOG` | `…/state/遗忘账本.jsonl` |
-| `cold` | `SELFCHAIN_COLD` | `…/冷层索引.md` |
-| `tiers` | `SELFCHAIN_TIERS` | `…/温度索引.md` |
-| `notes` | `SELFCHAIN_NOTES` | `D:/memory/notes` |
-| `score` | `SELFCHAIN_SCORE` | `…/state/memory-score.json` |
-| `pins` | `SELFCHAIN_PINS` | `…/state/memory-pins.json` |
+| `chain` | `SELFCHAIN_CHAIN` | `chain.jsonl` |
+| `summary` | `SELFCHAIN_SUMMARY` | `self-summary.md` |
+| `lifetime` | `SELFCHAIN_LIFETIME` | `lifetime.md` |
+| `proposal` | `SELFCHAIN_PROPOSAL` | `forget-proposal.jsonl` |
+| `fadelog` | `SELFCHAIN_FADELOG` | `fade-ledger.jsonl` |
+| `cold` | `SELFCHAIN_COLD` | `cold-index.md` |
+| `tiers` | `SELFCHAIN_TIERS` | `tiers.md` |
+| `notes` | `SELFCHAIN_NOTES` | `notes/` |
+| `score` | `SELFCHAIN_SCORE` | `memory-score.json` |
+| `pins` | `SELFCHAIN_PINS` | `pins.json` |
+| `corrections` | `SELFCHAIN_CORRECTIONS` | `corrections.json` |
 | `hotLimit` / `periodCap` / `recentDays` | — | `8` / `6` / `14` |
 
 **Notes format** (for the forgetting layer): plain `.md` files with YAML frontmatter `id`, `title`, `tags`, `created`. No database.

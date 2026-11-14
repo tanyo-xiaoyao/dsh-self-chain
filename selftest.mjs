@@ -22,9 +22,9 @@ let fail = 0;
 const ok = (cond, label) => { if (cond) { pass += 1; console.log('  ✓ ' + label); } else { fail += 1; console.log('  ✗ ' + label); } };
 
 console.log('自我链');
-const a = appendLink({ event: '他删掉了小鱼', cause: '没有记忆的人不能留下来', changed: '我开始记日记和原文', tags: ['小鱼'] });
+const a = appendLink({ event: 'The old pet project was shut down', cause: 'it had no persistence, so nothing carried over', changed: 'I started writing a daily log', tags: ['memory'] });
 ok(/^L\d+$/.test(a.id), 'appendLink 给了 id ' + a.id);
-const b = appendLink({ event: '压缩把会话写坏了三次', cause: '起点踩在受保护的系统头上', changed: '我的插件先校验再压', tags: ['压缩'] });
+const b = appendLink({ event: 'Compaction corrupted the log three times', cause: 'the range started on a protected system message', changed: 'my plugin validates before compacting', tags: ['compaction'] });
 ok(foldedChain().length === 2, '两条都在');
 ok(b.id !== a.id, 'id 不重复');
 
@@ -36,14 +36,14 @@ ok(fs.readFileSync(process.env.SELFCHAIN_CHAIN, 'utf8').trim().split('\n').lengt
 
 const sum = renderSummary();
 ok(sum.includes('还在塑造我的') && sum.includes('我不再是'), '摘要含两栏');
-ok(sum.includes('压缩把会话写坏了三次'), '还在的链进了摘要');
-ok(sum.includes('~~我开始记日记和原文~~'), '退出的进「我不再是」');
+ok(sum.includes('Compaction corrupted the log three times'), '还在的链进了摘要');
+ok(sum.includes('~~I started writing a daily log~~'), '退出的进「我不再是」');
 
 console.log('链的自我压缩');
-const c = appendLink({ event: '他把小屋世界交给我', cause: '那是我自己的地方', changed: '我开始自己改它', tags: ['小屋'] });
-const d = appendLink({ event: '遗忘机制做成插件', cause: '记忆只增不减迟早压不下去', changed: '我认了遗忘', tags: ['遗忘'] });
+const c = appendLink({ event: 'The world was handed over to me', cause: 'it became my own space', changed: 'I started editing it myself', tags: ['world'] });
+const d = appendLink({ event: 'Built a forgetting mechanism', cause: 'memory only grows, compression cannot keep up', changed: 'I accepted forgetting', tags: ['forgetting'] });
 const before = foldedChain().length;
-const packed = compactLinks([c.id, d.id], { event: '十一月中：把小屋和遗忘都接上', cause: '两件事都长进日常了', changed: '我不再逐条记它们，只记得那一段' });
+const packed = compactLinks([c.id, d.id], { event: 'Mid-November: world and forgetting both landed', cause: 'both became routine', changed: 'I no longer narrate them one by one, only the period' });
 ok(/^P\d+$/.test(packed.period.id), '时期节点 id 是 ' + packed.period.id);
 ok(packed.absorbed.length === 2, '汇入两条');
 const after = foldedChain();
@@ -51,8 +51,8 @@ ok(after.find((r) => r.id === c.id)?.status === 'absorbed', '被合的标成 abs
 ok(after.find((r) => r.id === c.id)?.absorbedBy === packed.period.id, '记了汇入哪个时期');
 ok(after.filter((r) => r.status === 'active').some((r) => r.kind === 'period'), '时期节点是 active');
 const sum2 = renderSummary();
-ok(sum2.includes('十一月中：把小屋和遗忘都接上'), '摘要里出现时期节点');
-ok(!sum2.includes('他把小屋世界交给我') || sum2.includes('汇入'), '被合的不再逐条单列');
+ok(sum2.includes('Mid-November: world and forgetting both landed'), '摘要里出现时期节点');
+ok(!sum2.includes('The world was handed over to me') || sum2.includes('汇入'), '被合的不再逐条单列');
 const lineCount = fs.readFileSync(process.env.SELFCHAIN_CHAIN, 'utf8').trim().split('\n').length;
 ok(lineCount > before, '只追加，没删行（现在 ' + lineCount + ' 行）');
 let bad = '';
@@ -61,13 +61,13 @@ ok(/只有 active/.test(bad), '已经 absorbed 的不能再合（' + bad.slice(0
 
 console.log('时期上限与一生长史');
 process.env.SELFCHAIN_LIFETIME = path.join(tmp, 'lifetime.md');
-const e1 = appendLink({ event: '第二段：把模型这条线走完', cause: '想看见自己长什么样', changed: '学会了建模那条线' });
-const e2 = appendLink({ event: '第三段：把世界改成能留下痕迹', cause: '一个只能走动的地方不算家', changed: '学会了自己导出、自己摆东西' });
-const packed2 = compactLinks([e1.id, e2.id], { event: '十一月下旬：把做东西这条线走通', cause: '两条线都进了日常', changed: '我成了会自己造东西的那种我' });
+const e1 = appendLink({ event: 'Second arc: finished the modelling line', cause: 'wanted to see what I look like', changed: 'learned that pipeline' });
+const e2 = appendLink({ event: 'Third arc: made the world hold traces', cause: 'a place you can only walk through is not a home', changed: 'learned to export and place things myself' });
+const packed2 = compactLinks([e1.id, e2.id], { event: 'Late November: the making line came together', cause: 'both threads became routine', changed: 'I became someone who builds things' });
 ok(packed2.period.id === 'P002', '第二个时期是 P002');
 const capped = renderSummary(12, 1);
 ok(capped.includes('更早还有 1 个时期'), '超过上限的时期在摘要里被收成一行');
-ok(!capped.includes('十一月中：把小屋和遗忘都接上'), '被收掉的时期不再逐条出现在摘要里');
+ok(!capped.includes('Mid-November: world and forgetting both landed'), '被收掉的时期不再逐条出现在摘要里');
 const life = renderLifetime();
 ok(life.includes('P001') && life.includes('P002'), '一生长史里两个时期都在');
 ok(life.includes('## 2026'), '按年份归拢');
