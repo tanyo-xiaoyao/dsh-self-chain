@@ -1,0 +1,9 @@
+{
+  "name": "dsh-self-chain",
+  "description": "Self-chain + forgetting for long-lived agents: causal event links, tiered memory, gist-only fading.",
+  "version": "0.1.0",
+  "entry": {
+    "name": "dsh-self-chain",
+    "inject": ["tools"]
+  }
+}
